@@ -72,13 +72,6 @@ app.delete('/:imagename/:client',function (req, res) {
 
 });
 
-const middleWare = (req, res, next) => {
-    console.log('middleWare');
-    console.log(req.body.client)
-    next();
-}
-
-
 app.post('/:client', upload.single('image'), async (req, res, next) => {
   const client = req.params.client;
   // console.log(client)
