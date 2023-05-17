@@ -24,7 +24,7 @@ app.listen(port,'0.0.0.0', () => {
 })
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const client = req.body.client;
+    const client = req.params.client;
     const clientDir = `./public/${client}`;
     fs.mkdirSync(clientDir, { recursive: true });
     cb(null, clientDir);
@@ -47,8 +47,10 @@ let upload = multer({
   }
 });
 
-app.delete('/:imagename',function (req, res) {
+app.delete('/:imagename/:client',function (req, res) {
   let message = "Error! in image upload.";
+  console.log('image name : ' ,req.params.imagename)
+  console.log('client name : ' ,req.params.client)
   if (!req.params.imagename) {
     console.log("No file received");
     message = "Error! in image delete.";
@@ -58,7 +60,7 @@ app.delete('/:imagename',function (req, res) {
     console.log('file received');
     console.log(req.params.imagename);
     try {
-      fs.unlinkSync(DIR+'/'+req.params.imagename);
+      fs.unlinkSync(DIR+'/'+req.params.client+'/'+req.params.imagename);
       console.log('successfully deleted /tmp/hello');
       return res.status(200).send('Successfully! Image has been Deleted');
     } catch (err) {
@@ -77,9 +79,9 @@ const middleWare = (req, res, next) => {
 }
 
 
-app.post('/', upload.single('image'), async (req, res, next) => {
-  const client = req.body.client;
-  console.log(client)
+app.post('/:client', upload.single('image'), async (req, res, next) => {
+  const client = req.params.client;
+  // console.log(client)
   const url = req.protocol + '://' + req.get('host');
   const imageUrl = `${url}/public/${client}/${req.file.filename}`;
   res.send(imageUrl);
