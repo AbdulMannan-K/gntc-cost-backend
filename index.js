@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 app.use('/public', express.static('public'));
 
-app.listen(port,'0.0.0.0', () => {
+app.listen(port,() => {
   console.log('Connected to port ' + port)
 })
 const storage = multer.diskStorage({
@@ -74,7 +74,7 @@ app.delete('/:imagename/:client',function (req, res) {
 
 app.post('/:client', upload.single('image'), async (req, res, next) => {
   const client = req.params.client;
-  // console.log(client)
+  console.log(client)
   const url = req.protocol + '://' + req.get('host');
   const imageUrl = `${url}/public/${client}/${req.file.filename}`;
   res.send(imageUrl);
